@@ -13,7 +13,18 @@ tests({
   //  console.log(number);
   // });
 
-  '': function() {},
-  '': function() {}
+  'It should run the callback function array.length times.': function() {
+    // force test to fail if there is no code yet
+    var counter = 0;
+    forEach([1, 2, 3], function(){
+      counter++;
+    });
+    // using eq from tiny test to check
+    // 3 is length of current array
+    eq(counter, 3)
+  },
+  'It should pass in the ith  element as the first argument to the callback.': function() {
+    fail();
+  }
 });
 </script>
