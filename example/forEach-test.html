@@ -1,7 +1,5 @@
 <script src="../tinytest.js"></script>
 <script>
-tests({
-
   // Ex 1:
   // forEach([1, 2, 3], function(){
   //  console.log('hi');
@@ -13,6 +11,17 @@ tests({
   //  console.log(number);
   // });
 
+// it takes 2 arguments array and callback
+// we want to take callback run array.lenth times
+function forEach(array, callback) {
+  for (var i = 0; i < array.length; i++){
+    // if array has length 3 > call array 3 times
+    // array[i] is number in callback agmt
+    callback(array[i]);
+  }
+}
+
+tests({
   'It should run the callback function array.length times.': function() {
     // force test to fail if there is no code yet
     var counter = 0;
@@ -23,8 +32,14 @@ tests({
     // 3 is length of current array
     eq(counter, 3)
   },
-  'It should pass in the ith  element as the first argument to the callback.': function() {
-    fail();
+  'It should pass in the ith element as the first argument to the callback.': function() {
+    // check if ith element is accessible in callback
+    // for sake of simplicity we just have [1] in array
+    forEach([1], function(number){
+      // Is number equal to 1?
+      eq(number, 1);
+    });
+    
   }
 });
 </script>
