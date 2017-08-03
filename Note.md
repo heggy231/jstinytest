@@ -96,3 +96,43 @@ var words = ["spray", "limit", "elite", "exuberant", "destruction", "present"];
 // });
 // Filtered array longWords is ["exuberant", "destruction", "present"]
 var longWords = words.filter(word => word.length > 6);
+
+- To count which index a letter is
+use charAt() or bracket notation
+var quote = "Stay awhile and listen!";
+quote.charAt(6); // output: "w"
+
+or 
+
+console.log(quote[6]); // w
+
+- Array.isArray 
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray
+Array.isArray() function determines whether the passed value is an Array.
+Array.isArray([1, 2, 3]);  // true
+Array.isArray({foo: 123}); // false
+
+# map 
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
+definition of map: original element will map to new element
+callback function is description for its relationship btwn original element to returned output
+
+- simple example that demonstrates power of .map()
+
+[1, 1, 1].map(function(num) {
+	return num * 20;
+});
+// output: [20, 20, 20]
+
+[1, 1, 1].map(function(num) {
+	// it could be boolean string undefined 
+	return true;
+});
+// output: [true, true, true]
+
+[1, 1, 1].map(function(num) {
+	return;
+});
+// output: undefined, undefined, undefined
+
+

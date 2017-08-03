@@ -5,19 +5,19 @@
   // filter([1, 2, 3], function() {});
 
   // Ex 2:
-  // callback function has access ith element
+  // callback function has access to value
   // filter([1, 2, 3], function(value){
   //  console.log(value);
   // });
 
   // Ex 3:
-  // Callback func as a 2nd argument should have access to ith position, index of current element.
+  // Callback func as a 2nd argument should have access to index/position
   // filter([1, 2, 3], function(number, index){
   //  console.log(index);
   // });
 
   // Ex 4:
-  // Pass Original array as 3rd argument to callback func
+  // Callback access to originalArray
   // filter([1, 2, 3], function(number, index, originalArray){
   //  console.log(originalArray);
   // });
@@ -29,33 +29,86 @@
   // }, {name: 'Heggy'});
 
   // Ex 6:
-  // filter() method creates a new array
+  // filter creates a new array and it doesn't modify original array (testArray)
   // var testArray = [1, 2, 3];
   // var filteredArray = filter(testArray, function() {});
   // testArray !== filteredArray;
 
   // Ex 7:
-  // check for its ability to filter things out
+  // check for its ability to filter things out works
   // var testArray = [1, 2, 3];
   // var filteredArray = filter(testArray, function(element) {
   //  return element > 1;
   // });
   // Expected output tobe items > 1; [2, 3]
 
-// it takes 2 arguments array and callback
-// we want to take callback run array.lenth times
+  function filter(originalArray, callback, optionalThis) {
+    var filterCallback = callback;
 
+    if (optionalThis) {
+      filterCallback = callback.bind(optionalThis);
+    }
+
+    var filteredArray = [];
+
+    for (var i = 0; i < originalArray.length; i++) {
+      // if callback returns true then push element into filteredArray
+      if (filterCallback(originalArray[i], i, originalArray)) {
+        filteredArray.push(originalArray[i]);
+      }
+    }
+
+    return filteredArray;
+  }
 
 tests({
   'It should run the callback function array.length times.': function() {
-    // force test to fail if there is no code yet
     var numberOfTimesCallbackHasRun = 0;
-    forEach([1, 2, 3], function(){
+    filter([1, 2, 3], function(){
       numberOfTimesCallbackHasRun++;
     });
-    // using eq from tiny test to check
-    // 3 is length of current array
     eq(numberOfTimesCallbackHasRun, 3)
+  },
+  'It should pass in the ith element as the first argument to the callback.': function() {
+    filter([1], function(number){
+      eq(number, 1);
+    });
+  },
+  'It should pass in ith position as the second argument to the callback.': function() {
+    filter([1], function(number, index){
+      eq(index, 0);
+    });
+  },
+  'It should pass in the original array as the third argument to the callback.': function() {
+    var testArray = [1, 2, 3];
+    filter(testArray, function(number, index, originalArray){
+      eq(originalArray, testArray);
+    });
+  },
+  'It should accept an optional this object.': function() {
+    filter([1], function() {
+      // Inside of here, this should be equal to configurableThisObject
+      // this.description should be equal to 'Configurable this object'
+      eq(this.description, 'I should be accessible inside of the callback');
+    // inside of callback function 'this' === obj we pass in
+    }, {description: 'I should be accessible inside of the callback'});
+  },
+  'It should return an array' : function() {
+    var filteredArray = filter([], function() {});
+    eq(Array.isArray(filteredArray), true);
+  },
+  'It should return a new array, not the array being filtered.' : function() {
+    var arrayBeingFiltered = [];
+    var filteredArray = filter(arrayBeingFiltered, function() {});
+    // filteredArray is not equal to testArray
+    eq(filteredArray !== arrayBeingFiltered, true);
+  },
+  'It should return a new array that only has elements where callback returns true.': function() {
+    var filteredArray = filter([1, 2], function(number) {
+      return number > 1;
+    });
+    eq(filteredArray.length, 1);
+    eq(filteredArray[0], 2);
   }
 });
 </script>
