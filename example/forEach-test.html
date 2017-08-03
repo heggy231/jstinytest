@@ -78,6 +78,9 @@ tests({
     });
   },
   'It should pass in the original array as the third argument to the callback.': function() {
+    // Beginning we were just passing array directly inside forEach([1, 2, 3])
+    // To compare origArr = testArr inside of eq() Make it indirectly refer to it 
+    // Therfore var testArray is created
     var testArray = [1, 2, 3];
     forEach(testArray, function(number, index, originalArray){
       eq(originalArray, testArray);
