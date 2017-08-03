@@ -50,7 +50,7 @@ var filteredArray = [1, 2, 3].filter(function(element, index, array) {
 
 filteredArray; // output: [2, 3]
 
-// refactor above code
+// refactor above code with strength and economy
 var filteredArray = [1, 2, 3].filter(function(element, index, array) {
 	return element > 1;
 });
@@ -63,6 +63,7 @@ var filteredArray = [1, 2, 3].filter(function(element, index, array) {
 });
 
 output: 
+element, index, array
 1 0 [ 1, 2, 3 ]
 2 1 [ 1, 2, 3 ]
 3 2 [ 1, 2, 3 ]
@@ -76,3 +77,22 @@ var filteredArray = [1, 2, 3].filter(function(element, index, array) {
 
 // output: PJ Sandwich PJ Sandwich PJ Sandwich
 // https://repl.it/JpjS/1
+
+- MDN ex)
+var words = ["spray", "limit", "elite", "exuberant", "destruction", "present"];
+
+var longWords = words.filter(function(word) {
+	console.log(this.favoriteSnack);
+	return word.length > 6;
+}, {favoriteSnack: "gum"});
+// output: 'gum' 6 times
+longWords;
+// output: ["exuberant", "destruction", "present"]
+
+ES6:
+var words = ["spray", "limit", "elite", "exuberant", "destruction", "present"];
+// var longWords = words.filter(function(word){ 
+// 	return word.length > 6;
+// });
+// Filtered array longWords is ["exuberant", "destruction", "present"]
+var longWords = words.filter(word => word.length > 6);
