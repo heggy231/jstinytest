@@ -1,53 +1,50 @@
 <script src="../tinytest.js"></script>
 <script>
   // Ex 1:
+  // run callback function array.length times
   // filter([1, 2, 3], function() {});
 
   // Ex 2:
-  // callback function in forEach should have access to the number in an array.
-  // forEach([1, 2, 3], function(number){
-  //  console.log(number);
+  // callback function has access ith element
+  // filter([1, 2, 3], function(value){
+  //  console.log(value);
   // });
 
   // Ex 3:
-  // Callback func as a 2nd argument should have access to index of current element.
-  // forEach([1, 2, 3], function(number, index){
+  // Callback func as a 2nd argument should have access to ith position, index of current element.
+  // filter([1, 2, 3], function(number, index){
   //  console.log(index);
   // });
 
   // Ex 4:
-  // The 3rd argument to callback func shoould be original array that forEach() is being applied to.
-  // forEach([1, 2, 3], function(number, index, originalArray){
+  // Pass Original array as 3rd argument to callback func
+  // filter([1, 2, 3], function(number, index, originalArray){
   //  console.log(originalArray);
   // });
-
 
   // Ex 5:
-  // forEach(array, callback, configurableThisObject ){
-  //  console.log(originalArray);
-  // });
+  // accepts optional this argument, inside of callback have access to the optional this obj
+  // filter([1, 2, 3], function(){
+  //  console.log(this.name);
+  // }, {name: 'Heggy'});
 
-  // review version 11 PJS optional this argument.  Under view > displayTodos method
-  // this points to original obj it is on which is view obj
+  // Ex 6:
+  // filter() method creates a new array
+  // var testArray = [1, 2, 3];
+  // var filteredArray = filter(testArray, function() {});
+  // testArray !== filteredArray;
+
+  // Ex 7:
+  // check for its ability to filter things out
+  // var testArray = [1, 2, 3];
+  // var filteredArray = filter(testArray, function(element) {
+  //  return element > 1;
+  // });
+  // Expected output tobe items > 1; [2, 3]
 
 // it takes 2 arguments array and callback
 // we want to take callback run array.lenth times
-function forEach(array, callback, optionalThisObject) {
-  var forEachCallback = callback;
 
-  if (optionalThisObject) {
-    // Want to bind configurableThisObject to the callback function.
-    forEachCallback = callback.bind(optionalThisObject);
-  }
-  for (var i = 0; i < array.length; i++){
-    // if array has length 3 > call array 3 times
-    // array[i] is number in callback agmt
-    // ex 3 test) Pass in index as the 2nd argument
-    // ex 4 test) Pass in originalArray as 3rd argmt, 
-    //  in this case, array is Orginal Array
-    forEachCallback(array[i], i, array);
-  }
-}
 
 tests({
   'It should run the callback function array.length times.': function() {
@@ -59,35 +56,6 @@ tests({
     // using eq from tiny test to check
     // 3 is length of current array
     eq(numberOfTimesCallbackHasRun, 3)
-  },
-  'It should pass in the ith element as the first argument to the callback.': function() {
-    // check if ith element is accessible in callback
-    // for sake of simplicity we just have [1] in array
-    forEach([1], function(number){
-      // Is number equal to 1?
-      eq(number, 1);
-    });
-  },
-  'It should pass in ith position as the second argument to the callback.': function() {
-    forEach([1], function(number, index){
-      // check index === 0 when callback func runs
-      // eq() is equality function from tiny test
-      eq(index, 0);
-    });
-  },
-  'It should pass in the original array as the third argument to the callback.': function() {
-    var testArray = [1, 2, 3];
-    forEach(testArray, function(number, index, originalArray){
-      eq(originalArray, testArray);
-    });
-  },
-  'It should accept an optional this object.': function() {
-    forEach([1], function() {
-      // Inside of here, this should be equal to configurableThisObject
-      // this.description should be equal to 'Configurable this object'
-      eq(this.description, 'I should be accessible inside of the callback');
-    // inside of callback function 'this' === obj we pass in
-    }, {description: 'I should be accessible inside of the callback'});
   }
 });
 </script>
