@@ -112,12 +112,20 @@ Array.isArray() function determines whether the passed value is an Array.
 Array.isArray([1, 2, 3]);  // true
 Array.isArray({foo: 123}); // false
 
+- Filter TDD's tricky parts review this: 
+https://watchandcode.com/courses/77710/lectures/1404003
+39:00
+* 'It should return an array' (using isArray method to check if it is an array)
+* 'It should return a new array, not the array being filtered.'
+* 'It should return a new array that only has elements where callback returns true.'
+
 # map 
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
 definition of map: original element will map to new element
 callback function is description for its relationship btwn original element to returned output
 
 - simple example that demonstrates power of .map()
+https://watchandcode.com/courses/77710/lectures/1429573
 
 [1, 1, 1].map(function(num) {
 	return num * 20;

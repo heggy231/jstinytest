@@ -95,12 +95,13 @@ tests({
   },
   'It should return an array' : function() {
     var filteredArray = filter([], function() {});
+    // filteredArray is actually an Array.
     eq(Array.isArray(filteredArray), true);
   },
   'It should return a new array, not the array being filtered.' : function() {
     var arrayBeingFiltered = [];
     var filteredArray = filter(arrayBeingFiltered, function() {});
-    // filteredArray is not equal to testArray
+    // filteredArray is not equal to testArray.
     eq(filteredArray !== arrayBeingFiltered, true);
   },
   'It should return a new array that only has elements where callback returns true.': function() {
