@@ -143,4 +143,49 @@ https://watchandcode.com/courses/77710/lectures/1429573
 });
 // output: undefined, undefined, undefined
 
+- note for return value in map
+  it will have exactly same number of elements in map as in for each.  Note that filter method will most of the time less than original no of elements as return value since it gets filtered out.
 
+- In map, each original value of element will map to new elements.  length of original array = length of new array 
+
+- at the end of map function, try running map function that you just made in the console that your code is running.
+
+map([1,2,3,4], function(number) {
+	return number * 2;
+});
+
+// output: [2, 4, 6, 8]
+
+- edge case of MDN calls "missing elements"
+// first element is missing
+
+var weirdArray = [, 1, undefined];
+weirdArray[0] // undefined, missing element
+weirdArray[1] // 1
+weirdArray[2] // undefined, but property exists
+
+The result of weirdArray[0] and weirdArray[2] being equal
+is weird since [0] is missing val vs [2] is assigned value is undefined.
+
+Let's look at it using object (since array is an obj)
+var fakeArray = {
+	1: 1,
+	2: undefined
+}
+// note 0: is not defined
+
+fakeArray[0] // undefined, missing element
+fakeArray[1] // 1
+fakeArray[2] // undefined, but property exists
+
+// The result of fakeArray[0] and fakeArray[2] being equal
+is unexpected since they are characteristically different.  [0] is missing val vs [2] is unassigned value.
+
+- How do we check if propertyName exists in obj?
+// test if propertyName exisits
+// propertyName in object
+0 in fakeArray // false no property exist
+1 in fakeArray // true property exist
+2 in fakeArray // true property exist
+
+propertyName in object sucessfully checks "missing elements" (as referred in MDN https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)

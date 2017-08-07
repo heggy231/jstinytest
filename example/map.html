@@ -36,14 +36,15 @@
   // Expected mappedArray to be [2, 4, 6]
 function map (originalArray, callback, optionalThis) {
   var mapCallback = callback;
-
+  // if optionalThis is passed in
   if (optionalThis) {
     mapCallback = callback.bind(optionalThis);
   }
-
+  var mappedArray = [];
   for(var i = 0; i < originalArray.length; i++){
-    mapCallback(originalArray[i], i, originalArray);
+    mappedArray.push(mapCallback(originalArray[i], i, originalArray)); 
   }
+  return mappedArray;
 }
 
 tests({
@@ -75,25 +76,21 @@ tests({
       eq(this.description, 'I should be accessible inside of the callback');
     }, {description: 'I should be accessible inside of the callback'});
   },
-  'It should return an array' : function() {
-    fail();
-    // var filteredArray = filter([], function() {});
-    // eq(Array.isArray(filteredArray), true);
+  'It should return an array.' : function() {
+    var mappedArray = map([], function() {});
+    eq(Array.isArray(mappedArray), true);
   },
   'It should return a new array, not the original array.' : function() {
-    fail();
-    // var arrayBeingFiltered = [];
-    // var filteredArray = filter(arrayBeingFiltered, function() {});
-    // // filteredArray is not equal to testArray
-    // eq(filteredArray !== arrayBeingFiltered, true);
+    var originalArray = [];
+    var mappedArray = map(originalArray, function() {});
+    eq(mappedArray !== originalArray, true);
   },
-  'It should return a new array that only has elements that have been transformed by callback.': function() {
-    fail();
-    // var filteredArray = filter([1, 2], function(number) {
-    //   return number > 1;
-    // });
-    // eq(filteredArray.length, 1);
-    // eq(filteredArray[0], 2);
+  'It should return a new mapped array': function() {
+    var mappedArray = map([1], function(number) {
+      return number * 4;
+    });
+    // expeted result [4]
+    eq(mappedArray[0], 4);
   }
 });
 </script>
