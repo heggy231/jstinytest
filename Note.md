@@ -189,3 +189,61 @@ is unexpected since they are characteristically different.  [0] is missing val v
 2 in fakeArray // true property exist
 
 propertyName in object sucessfully checks "missing elements" (as referred in MDN https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
+
+- undefined ('missing value') * 2 = NaN
+
+# understanding reduce from elementary level
+
+var numbers = [1, 2, 3, 4];
+
+// 0 + 1 = 1
+// 1 + 2 = 3
+// 3 + 3 = 6
+// 6 + 4 = 10
+
+var sumSoFar = 0;
+sumSoFar = sumSoFar + numbers[0] // 0 + 1 = 1
+sumSoFar = sumSoFar + numbers[1] // 1 + 2 = 3
+sumSoFar = sumSoFar + numbers[2] // 3 + 3 = 6
+sumSoFar = sumSoFar + numbers[3] // 6 + 4 =10
+// output: 10
+
+function adder(sumSoFar, nextNumber) {
+  return sumSoFar + nextNumber;
+}
+
+var sumSoFar = 0;
+sumSoFar = adder(sumSoFar, numbers[0]) // 0 + 1 = 1
+sumSoFar = adder(sumSoFar, numbers[1]) // 1 + 2 = 3
+sumSoFar = adder(sumSoFar, numbers[2]) // 3 + 3 = 6
+sumSoFar = adder(sumSoFar, numbers[3]) // 6 + 4 =10
+// output: 10
+
+var numbers = [1, 2, 3, 4];
+var sumSoFar = 0;
+for (var i = 0; i < numbers.length; i++){
+  sumSoFar = adder(sumSoFar, numbers[i]);
+}
+// output: 10
+
+function getSum(numbers, adder, startingValue) {
+  var sumSoFar = startingValue;
+  for (var i = 0; i < numbers.length; i++) {
+    sumSoFar = adder(sumSoFar, numbers[i]);
+  }
+  return sumSoFar;
+}
+getSum(numbers, adder, 0);
+// output: 10
+
+function reduce(array, callback, startingValue) {
+  var resultSoFar = startingValue;
+  for (var i = 0; i < array.length; i++) {
+    resultSoFar = callback(resultSoFar, array[i]);
+  }
+  return resultSoFar;
+}
+reduce(['h', 'e', 'g', 'g', 'y'], function(resultSoFar, nextLetter) {
+  return resultSoFar + nextLetter;
+}, '');
+// output: "heggy"
