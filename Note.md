@@ -247,3 +247,76 @@ reduce(['h', 'e', 'g', 'g', 'y'], function(resultSoFar, nextLetter) {
   return resultSoFar + nextLetter;
 }, '');
 // output: "heggy"
+
+- number of time reduce run
+
+// If initialValue exist, callback runs array.lenth times
+[1].reduce(function() {
+	console.log('hi');
+}, 0);
+// output: 'hi' once
+[1, 2, 3].reduce(function() {
+	console.log('hi');
+}, 0);
+// output: 'hi' three times; according to the number of elements in array
+
+// If No initialValue, callback runs (array.length - 1) times
+[1, 2, 3].reduce(function() {
+	console.log('hi');
+});
+// output: 'hi' two times; (array.length - 1) times
+- Resource from MDN doc:  If no initialValue is provided, then accumulator will be equal 
+// to the first value in the array, and currentValue will be equal to the second.
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+
+- Resource 2 from WnC: https://watchandcode.com/courses/77710/lectures/1513011 at 9:50 min
+
+# // If initialValue, and array is empty, return initialValue without calling callback.
+	[].reduce(function() {
+		console.log('No, No, I shouldn\'t be called');
+	}, 0);
+	// output: 0 // no callback was called only initial value returned
+
+# If initialValue, and array is empty but with holes, 
+#	   return initialValue without calling callback.
+How do we test if array is empty?
+
+[,,,,].reduce(function() {
+	console.log('No, No, I shouldn\'t be called');
+}, 0);
+	// output: 0 // same behavior with empty array above with init.Val
+
+- [revisit] How do we check if propertyName exists in obj?
+	var testArray = ['a', 'b', 'c'];
+	// Does propertyName exists in obj? Does propertyName 0 exist in testArray Obj?
+	0 in testArray // true
+	1 in testArray // true
+	2 in testArray // true
+	3 in testArray // false
+
+	var arrayOfHoles = [,,,,];
+	0 in arrayOfHoles; // does 0 property name exist in arrayOfHoles?
+	// output: false
+	4 in arrayOfHoles; // does 0 property name exist in arrayOfHoles?
+	// output: false
+	// all are false since no property name is assigned; they are holes
+
+## In conclusion, to test array is empty is to test if there are zero assigned index
+- solution: Object.keys(/* array */).length === 0;
+
+	// Object.keys() method returns an array of a given object's own enumerable properties,
+	// in the same order as that provided by a for...in loop
+	// (the difference being that a for-in loop enumerates properties in the
+	// prototype chain as well).
+	Object.keys([1, 2, 3])
+	// output: ["0", "1", "2"] << only the property key names
+	Object.keys([])
+	// output: []
+	Object.keys([,,])
+	// output: []
+
+We can use .length to see if obj key is empty.  Object.keys(/* array */).length === 0;
+	// empty array
+	Object.keys([]).length === 0;
+	// works even with holes!
+	Object.keys([,,,]).length === 0;
