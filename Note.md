@@ -271,15 +271,14 @@ reduce(['h', 'e', 'g', 'g', 'y'], function(resultSoFar, nextLetter) {
 
 - Resource 2 from WnC: https://watchandcode.com/courses/77710/lectures/1513011 at 9:50 min
 
-# // If initialValue, and array is empty, return initialValue without calling callback.
+# If initialValue, and array is empty, return initialValue without calling callback.
 	[].reduce(function() {
 		console.log('No, No, I shouldn\'t be called');
 	}, 0);
 	// output: 0 // no callback was called only initial value returned
 
-# If initialValue, and array is empty but with holes, 
-#	   return initialValue without calling callback.
-How do we test if array is empty?
+
+How do we test if array is empty when there is hole?
 
 [,,,,].reduce(function() {
 	console.log('No, No, I shouldn\'t be called');
@@ -292,7 +291,7 @@ How do we test if array is empty?
 	0 in testArray // true
 	1 in testArray // true
 	2 in testArray // true
-	3 in testArray // false
+	3 in testArray // false no index (prop names) exists
 
 	var arrayOfHoles = [,,,,];
 	0 in arrayOfHoles; // does 0 property name exist in arrayOfHoles?
@@ -320,3 +319,20 @@ We can use .length to see if obj key is empty.  Object.keys(/* array */).length 
 	Object.keys([]).length === 0;
 	// works even with holes!
 	Object.keys([,,,]).length === 0;
+
+- To find out array with one element
+	Note that you can't check just by [,].length === 1 since there could be holes
+	Use earlier method Object.keys() which gives array of its assigned properties
+		since holes do not have assigned property names therefore, we can check length
+	Object.keys([,,]).length === 1
+
+- To extract single element (Test case: If no initialValue, and array has one element, it should return that element without calling callback.)
+	var array = [,1];
+
+	if (Object.keys(array).length === 1) {
+		var singleIndex = Object.keys(array)[0];
+	}
+
+	singleIndex = "1" // extracted the value of single ('solo') element
+	Note: Object.keys(array) // ["1"] just gets the assigned index in array
+				Object.keys(array)[0] // "1" gets the value of single element

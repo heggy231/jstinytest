@@ -22,19 +22,36 @@
 // Return value:
   // Returns a single value.
 
+
+
 function reduce(array, callback, initialValue) {
+
   var startingIndex = 0;
   var resultSoFar = initialValue;
 
-  // Detects if no initialValue then startingInd=1
+  // No initialValue then startingInd=1
   if (arguments.length < 3) {
     resultSoFar = array[startingIndex];
     startingIndex++;
+
+    // Array has one element then gets the index number
+    if (Object.keys(array).length === 1) {
+      var singleIndex = Object.keys(array)[0];
+    }
+
+  // Has initial Value.
+  } else {
+    // initialValue exist AND array is empty
+    if (Object.keys(array).length === 0){
+      // return initialValue and exits w/o callback below
+      return initialValue;
+    }
   }
 
   for (var i = startingIndex; i < array.length; i++) {
     callback(resultSoFar, array[i], i);
   }
+
 }
 
 tests({
@@ -86,10 +103,22 @@ tests({
   },
 
   'If initialValue, and array is empty, return intialValue without calling callback.': function() {
-    fail();
+    var numberOfTimesCallbackHasRun = 0;
+    var initialValue = 0;
+    var reduceResult =  reduce([,,], function() {
+      // this callback should not run just for testing that
+      numberOfTimesCallbackHasRun++;
+    }, initialValue);
+    eq(reduceResult, initialValue);
+    eq(numberOfTimesCallbackHasRun, 0);
   },
   'If no initialValue, and array has one element, it should return that element without calling callback.': function() {
-    fail();
+    var numberOfTimesCallbackHasRun = 0;
+    var reduceResult = reduce([1], function() {
+      numberOfTimesCallbackHasRun++;
+    });
+    eq(reduceResult, 1);
+    eq(numberOfTimesCallbackHasRun, 0);
   },
 
   'It should actually reduce.': function() {
