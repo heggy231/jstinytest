@@ -226,6 +226,16 @@ for (var i = 0; i < numbers.length; i++){
 }
 // output: 10
 
+- Progression to creating reduce funtion prototype:
+
+function getSum(numbersArray, adderFunction, startingValue) {
+	var sumSoFar = startingValue;
+	for (var i = 0; i <numbersArray.length; i++) {
+		sumSoFar = adderFunction(sumSoFar, numbersArray[i]);
+	}
+	return sumSoFar;
+}
+
 function getSum(numbers, adder, startingValue) {
   var sumSoFar = startingValue;
   for (var i = 0; i < numbers.length; i++) {
@@ -233,8 +243,11 @@ function getSum(numbers, adder, startingValue) {
   }
   return sumSoFar;
 }
+
 getSum(numbers, adder, 0);
 // output: 10
+
+- Final product reduce prototype: generalize
 
 function reduce(array, callback, startingValue) {
   var resultSoFar = startingValue;
@@ -243,12 +256,13 @@ function reduce(array, callback, startingValue) {
   }
   return resultSoFar;
 }
+
 reduce(['h', 'e', 'g', 'g', 'y'], function(resultSoFar, nextLetter) {
   return resultSoFar + nextLetter;
 }, '');
 // output: "heggy"
 
-- number of time reduce run
+- Number of times Reduce Runs is Equal to the Number of Elements in array
 
 // If initialValue exist, callback runs array.lenth times
 [1].reduce(function() {
@@ -300,6 +314,16 @@ How do we test if array is empty when there is hole?
 	// output: false
 	// all are false since no property name is assigned; they are holes
 
+- [usecase for key in obj] Skip over holes when taking action.
+	var array = [, 1, 2, ];
+	for (var i = 0; i < array.length; i++) {
+		debugger;
+		if (i in array) {
+			console.log(i);
+		}
+	}
+	// output: 1, 2
+	
 ## In conclusion, to test array is empty is to test if there are zero assigned index
 - solution: Object.keys(/* array */).length === 0;
 
@@ -336,3 +360,22 @@ We can use .length to see if obj key is empty.  Object.keys(/* array */).length 
 	singleIndex = "1" // extracted the value of single ('solo') element
 	Note: Object.keys(array) // ["1"] just gets the assigned index in array
 				Object.keys(array)[0] // "1" gets the value of single element
+
+	- Here is a hack to skip holes but extract the one value in array of one element with holes
+
+	var array = [,1]
+	    // If array has one element, return its value w/o callback
+    if (Object.keys(array).length === 1) {
+      // get the index with assigned value which skips over holes
+      // Object.keys() returns array of assigned key names ["0"]
+      var singleIndex = Object.keys(array)[0]; // output: 1
+      // get the value of that extracted index
+      var singleElement = array[singleIndex]; // array[1] = 1
+      return singleElement;
+    }
+	// output: 1
+
+# Test: It should exclude holes. FAILED Error: assertEquals() "NaN" != "6"
+since reduce array [, 1, 2, 3] has hole which is undefine.  When adding undefine with number you get " NaN ".
+undefine + 1
+// output NaN

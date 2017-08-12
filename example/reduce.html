@@ -22,8 +22,6 @@
 // Return value:
   // Returns a single value.
 
-
-
 function reduce(array, callback, initialValue) {
 
   var startingIndex = 0;
@@ -34,9 +32,14 @@ function reduce(array, callback, initialValue) {
     resultSoFar = array[startingIndex];
     startingIndex++;
 
-    // Array has one element then gets the index number
+    // If array has one element, return its value w/o callback
     if (Object.keys(array).length === 1) {
-      var singleIndex = Object.keys(array)[0];
+      // get the index with assigned value which skips over holes
+      // Object.keys() returns array
+      var onlyIndex = Object.keys(array)[0];
+      // get the value of that extracted index
+      var onlyElement = array[onlyIndex];
+      return singleElement;
     }
 
   // Has initial Value.
@@ -49,9 +52,15 @@ function reduce(array, callback, initialValue) {
   }
 
   for (var i = startingIndex; i < array.length; i++) {
-    callback(resultSoFar, array[i], i);
+    // skip over holes
+    if (i in array) {
+      // resultSoFar is initial value
+      resultSoFar = callback(resultSoFar, array[i], i);
+    }
+
   }
 
+  return resultSoFar;
 }
 
 tests({
@@ -122,10 +131,29 @@ tests({
   },
 
   'It should actually reduce.': function() {
-    fail();
+    // sumSoFar(resultSoFar) = startingValue
+    // a = sumSoFar, b = numbers[i]
+    var sum = reduce([1, 2, 3], function(a, b) {
+      // return sumSoFar(a) + nextNumber (b, array[i]);
+      // function adder(sumSoFar, nextNumber) {
+      //  return sumSoFar + nextNumber;}
+      // resultSoFar = callback(resultSoFar>> (a), array[i]>> (b));
+      return a + b;
+    }, 0);
+
+    eq(sum, 6);
   },
-  'It should exclude holes.': function() {
-    fail();
+  'If initialValue, it should exclude holes.': function() {
+    var sum = reduce([, 1, ,  2, 3, ], function(a, b) {
+      return a + b;
+    }, 0);
+    eq(sum, 6);
+  },
+  'If no initialValue, it should exclude holes too.': function() {
+    var sum = reduce([, 1, ,  2, 3, ], function(a, b) {
+      return a + b;
+    });
+    eq(sum, 6);
   },
   'If array is empty and no initialValue, throw TypeError.': function() {
     fail();
