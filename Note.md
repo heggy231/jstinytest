@@ -323,7 +323,7 @@ How do we test if array is empty when there is hole?
 		}
 	}
 	// output: 1, 2
-	
+
 ## In conclusion, to test array is empty is to test if there are zero assigned index
 - solution: Object.keys(/* array */).length === 0;
 
@@ -379,3 +379,106 @@ We can use .length to see if obj key is empty.  Object.keys(/* array */).length 
 since reduce array [, 1, 2, 3] has hole which is undefine.  When adding undefine with number you get " NaN ".
 undefine + 1
 // output NaN
+
+# How to skip the very first hole when there is no initial value
+
+    // We want to skip holes at the beginning of the array.
+    while (/* there are holes at the beginning of the array */) {
+      startingIndex++;
+    }
+
+		while (/* there are holes at the beginning of the array */) {
+      startingIndex++;
+    }
+- holes at the beginning of the array.
+	var array = [, , 1];
+	var startingIndex = 0
+	while (/* there are holes at the beginning of the array */) {
+		startingIndex++;
+	}
+
+  array = [, , 1];
+	while (startingIndex in array === false) {
+		startingIndex++;
+	}
+
+# Error handling
+// how to handle error with out program puase and break
+- try...catch
+
+try {
+  [].reduce(function() {});
+// pass in error (e) to catch error
+} catch (e)	{
+  console.log(e);
+}
+
+// output: TypeError: Reduce of empty array with no initial value
+    at Array.reduce (<anonymous>)
+    at <anonymous>:3:6
+
+// we can ignore the error and program can continue running
+try {
+  [].reduce(function() {});
+} catch (e) {
+}
+
+// output: TypeError has been ignored
+
+- instanceOf
+syntax
+object instanceof constructor
+
+parameter: 
+object: The object to test
+constructor: Function to test against
+
+Look at kind of error that has been thrown using instanceOf
+
+try {
+  [].reduce(function() {});
+} catch(e) {
+  // Is this error actually TypeError?  Is this instanceof TypeError?
+  console.log(e instanceof TypeError);
+}
+// output: true
+
+- List of typeErrors 
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+
+Error types: EvalError, InternalError, RangeError, ReferenceError, SyntaxErro
+
+
+  - 'If array is empty and no initialValue, throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      reduce([], function() {}); 
+    } catch(e) { // e is object to test
+      // Is this error actually TypeError?  Is this instanceof TypeError?
+      isTypeError = (e instanceof TypeError);
+    }
+    eq(isTypeError, true);
+  }
+
+READ 1) TypeError (done)
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError
+
+READ 2) instanceof (done)
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch
+
+My favorite example of instanceof
+// create a function Object constructor
+function Car(make, model, year) {
+  this.make = make;
+  this.model = model;
+  this.year = year;
+}
+var mycar = new Car('Honda', 'Accord', 1998);
+var a = mycar instanceof Car;    // returns true
+var b = mycar instanceof Object; // returns true
+
+READ 3) try...catch (done)
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch
+
+READ 4) Error (done)
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error

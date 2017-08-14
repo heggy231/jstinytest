@@ -26,11 +26,10 @@ function reduce(array, callback, initialValue) {
 
   var startingIndex = 0;
   var resultSoFar = initialValue;
+  var length = array.length;
 
   // No initialValue then startingInd=1
   if (arguments.length < 3) {
-    resultSoFar = array[startingIndex];
-    startingIndex++;
 
     // If array has one element, return its value w/o callback
     if (Object.keys(array).length === 1) {
@@ -39,8 +38,25 @@ function reduce(array, callback, initialValue) {
       var onlyIndex = Object.keys(array)[0];
       // get the value of that extracted index
       var onlyElement = array[onlyIndex];
-      return singleElement;
+      return onlyElement;
     }
+
+    // bug found
+    // [] 
+    // startingIndex 0, 1, 2, 3 and never ends
+    [ , , ] // length = 3
+    0 hole
+    1 hole
+    2 hole
+    // continue bumping startingIndex as long as startingIndex < length
+
+
+    // We want to skip holes at the beginning of the array.
+    while (startingIndex in array === false && startingIndex < length) {
+      startingIndex++;
+    }
+    resultSoFar = array[startingIndex];
+    startingIndex++;
 
   // Has initial Value.
   } else {
@@ -156,7 +172,14 @@ tests({
     eq(sum, 6);
   },
   'If array is empty and no initialValue, throw TypeError.': function() {
-    fail();
+    var isTypeError = false;
+    try {
+      reduce([], function() {});
+    } catch(e) {
+      // Is this error actually TypeError?  Is this instanceof TypeError?
+       isTypeError = (e instanceof TypeError);
+    }
+    eq(isTypeError, true);
   },
   'It should pass array as fourth argument to callback.': function() {
     fail();
