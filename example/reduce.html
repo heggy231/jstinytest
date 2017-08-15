@@ -27,31 +27,28 @@ function reduce(array, callback, initialValue) {
   var startingIndex = 0;
   var resultSoFar = initialValue;
   var length = array.length;
+  var arrayIndexes = Object.keys(array);
 
   // No initialValue then startingInd=1
   if (arguments.length < 3) {
+    // Array is empty, throw TypeError (from test case below:If array is empty and no initialValue, throw TypeError)
+    if (arrayIndexes.length === 0){ // if array is empty
+      // throw typeError by first throw then second create new Obj TypeError constructor 
+      throw new TypeError('Reduce of empty array with no initial value');
+    }
 
     // If array has one element, return its value w/o callback
-    if (Object.keys(array).length === 1) {
+    if (arrayIndexes.length === 1) {
       // get the index with assigned value which skips over holes
       // Object.keys() returns array
-      var onlyIndex = Object.keys(array)[0];
+      var onlyIndex = arrayIndexes[0];
       // get the value of that extracted index
       var onlyElement = array[onlyIndex];
       return onlyElement;
     }
 
-    // bug found
-    // [] 
-    // startingIndex 0, 1, 2, 3 and never ends
-    [ , , ] // length = 3
-    0 hole
-    1 hole
-    2 hole
-    // continue bumping startingIndex as long as startingIndex < length
-
-
     // We want to skip holes at the beginning of the array.
+    // continue bumping startingIndex as long as startingIndex < length
     while (startingIndex in array === false && startingIndex < length) {
       startingIndex++;
     }
@@ -61,17 +58,17 @@ function reduce(array, callback, initialValue) {
   // Has initial Value.
   } else {
     // initialValue exist AND array is empty
-    if (Object.keys(array).length === 0){
+    if (arrayIndexes.length === 0){
       // return initialValue and exits w/o callback below
       return initialValue;
     }
   }
 
-  for (var i = startingIndex; i < array.length; i++) {
+  for (var i = startingIndex; i < length; i++) {
     // skip over holes
     if (i in array) {
       // resultSoFar is initial value
-      resultSoFar = callback(resultSoFar, array[i], i);
+      resultSoFar = callback(resultSoFar, array[i], i, array);
     }
 
   }
@@ -182,7 +179,10 @@ tests({
     eq(isTypeError, true);
   },
   'It should pass array as fourth argument to callback.': function() {
-    fail();
+    var testArray = [1, 2];
+    reduce(testArray, function(previousValue, currentValue, currentIndex, arrayToReduce) {
+      eq(arrayToReduce, testArray);
+    });
   }
 });
 

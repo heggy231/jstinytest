@@ -482,3 +482,14 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try
 
 READ 4) Error (done)
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+Note: Error constructor creates an error object.  Instances of Error objects are thrown when runtime
+
+
+Note:
+// what TypeError naitive reduce throws
+[].reduce(function() {});
+// output error message: "Reduce of empty array with no initial value"
+
+Todos for later day:
+- [ ] Go over TDD esp Reduce one more time it is hard one to grabs
+- [ ] Play around with my reduce function vs native reduce function
