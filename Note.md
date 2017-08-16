@@ -493,3 +493,87 @@ Note:
 Todos for later day:
 - [ ] Go over TDD esp Reduce one more time it is hard one to grabs
 - [ ] Play around with my reduce function vs native reduce function
+
+# SimpleTest 1: Error handling, setTimeout
+
+- Manual way to print values individually
+var student = {
+	name: "Heggy",
+	hiChew: true,
+	pencil: true
+};
+
+console.log(student.name);
+console.log(student.hiChew);
+console.log(student.pencil);
+
+- what if we don't know the keys that an object has. In that case, looping is a much better idea. 
+- for...in loop to iterate through an object (ex: student)
+var student = {
+	name: "Heggy",
+	hiChew: true,
+	pencil: true
+};
+
+// singleKey is variable here so name it whatever you like
+for(var singleKey in student){
+	console.log(student[singleKey]);
+}
+
+// output: "Heggy" true true
+
+- Bonus: if..in: Determine if a key exists in an object 
+ref: https://www.rithmschool.com/courses/javascript/javascript-objects-iteration
+var obj = {
+	chicken: 55,
+	waterMellon: 'red'
+}
+
+// does chicken prop (key) exist in obj?
+if ("chicken" in obj){
+	console.log("chicken for dinner!");
+}
+// output: "chicken for dinner!"
+
+if ("hiChew" in obj){
+	console.log("hiChew for dessert!");
+}
+// output: nothing since there is no key name "hiChew"
+
+- test what you learn:
+Note: solution video: https://www.rithmschool.com/courses/javascript/javascript-objects-exercises
+1) Given the following object below, write code to print the value then the key to the console separated by '=>':
+
+var namesAndHobbies = {
+    elie: "JavaScript",
+    matt: "jogging",
+    janey: "table building",
+    tim: "sailing"
+}
+
+// Output should be:
+// JavaScript => elie
+// jogging => matt
+// table building => janey
+// sailing => tim
+
+for(var key in namesAndHobbies) {
+	console.log( key + " => " + namesAndHobbies[key]);
+}
+
+
+2) Add a key for your name, and a value for your favorite hobby to the namesAndHobbies object.
+
+name
+
+
+3) Write an if statement that console.logs your name and hobby to the console if the key of your name is contained in the object.
+
+# under tinytest.js, new concept: 1) apply
+
+var tests = {testName: function(){}, testName2: function(){}, testName2: function(){}}
+var testAction = tests[testName];
+// apply would bind this keyword and run it for you
+testAction.apply(this);
+
+Note: var fail = TinyTest.fail.bind(TinyTest), you would only bind this keyword and you have to run it when you are ready by 
