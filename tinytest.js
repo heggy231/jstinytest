@@ -53,21 +53,43 @@ var TinyTest = {
             // testName is property inside of tests obj
             var testAction = tests[testName];
             try {
-                // if no error test passes
-                testAction.apply(this); // new concept: apply
+                // if no error test passes > Test: OK
+                // .apply(this) where bind this > TinyTest OBJ
+                // also .apply() runs the method immediately
+                testAction.apply(this); // calls the testcase
                 console.log('Test:', testName, 'OK');
             } catch (e) {
                 // if detected error from try section
                 failures++;
                 console.error('Test:', testName, 'FAILED', e);
-                console.error(e.stack); // new concept: e.stack
+                console.error(e.stack); // stack trace outputs series of functions
+                // that led to the error you got.
             }
         }
+        
+        // understand why my code is inside of setTimeOut():
+        // What's your window doing first in the background when the page is loading (listed in order of importance)? 
+        // 1. JavaScript (priority 1)
+        // 2. Update the DOM (if it is first time, create DOM)
+        //      ex) window.document, document.body if any changes to DOM it will 
+        //          auto update DOM
+        // 3. Extra tasks (e.g. callbacks passed into setTimeout)
+        //     therefore, we are using setTimeout to ensure delay action
+
+        // setTimout runs alarm clock that runs bit later, give DOM its chance to load before we load the setTimeout(){callback function}
+        // if (window.document && document.body) {
+        //   document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+        // } else {
+        //   console.log('DOM is not ready yet!');
+        // }
+
         setTimeout(function() { // Give document a chance to complete
             if (window.document && document.body) {
-                document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+                    document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+            } else {
+                console.log('DOM is not ready yet!');
             }
-        }, 0);
+        }, 0); 
     },
 
     // at the beginning TDD simply fail test; throws error, optionally add message if needed

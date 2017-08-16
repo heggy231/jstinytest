@@ -78,6 +78,7 @@ function reduce(array, callback, initialValue) {
 
 tests({
   'If initialValue, callback should run array.length times.': function() {
+    fail();
     var numberOfTimesCallbackHasRun = 0;
     reduce([1], function() {
       numberOfTimesCallbackHasRun++;
@@ -85,6 +86,7 @@ tests({
     eq(numberOfTimesCallbackHasRun, 1);
   },
   'If no initialValue, callback should run array.length - 1 times': function() {
+    fail();
     var numberOfTimesCallbackHasRun = 0;
     reduce([1], function() {
       numberOfTimesCallbackHasRun++;
@@ -179,6 +181,7 @@ tests({
     eq(isTypeError, true);
   },
   'It should pass array as fourth argument to callback.': function() {
+    fail();
     var testArray = [1, 2];
     reduce(testArray, function(previousValue, currentValue, currentIndex, arrayToReduce) {
       eq(arrayToReduce, testArray);

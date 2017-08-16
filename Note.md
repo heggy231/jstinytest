@@ -577,3 +577,35 @@ var testAction = tests[testName];
 testAction.apply(this);
 
 Note: var fail = TinyTest.fail.bind(TinyTest), you would only bind this keyword and you have to run it when you are ready by 
+
+- [ ] Challenge for Heggy do TDD for .apply() 
+
+# stack
+stack trace: series of function calls that led to the error you got
+
+# window load priority:
+- What's your window doing first in the background when the page is loading (listed in order of importance)? 
+  1. JavaScript (priority 1)
+  2. Update the DOM (if it is first time, create DOM)
+      ex) window.document, document.body if any changes to DOM it will auto update DOM
+  3. Extra tasks (e.g. callbacks passed into setTimeout) therefore, we are using setTimeout to ensure delay action
+
+	Therefore, tinytest.js has this line of code.
+	// Give document a chance to complete
+	setTimeout(function() {
+		if (window.document && document.body) {
+			document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+		}
+	}, 0);
+
+	Try this in console to fully witness that DOM not being ready inside your js file.
+
+		if (window.document && document.body) {
+		document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+	} else {
+		console.log('DOM is not ready yet!');
+	}
+
+Note: try this in DOM for fun.  
+document.body.style.backgroundColor = '#ff9999';
+document.body.style.backgroundColor = '#99ff99'; 
