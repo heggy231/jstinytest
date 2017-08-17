@@ -609,3 +609,217 @@ stack trace: series of function calls that led to the error you got
 Note: try this in DOM for fun.  
 document.body.style.backgroundColor = '#ff9999';
 document.body.style.backgroundColor = '#99ff99'; 
+
+- Part of TinyTest.js part 1. Required videos to watch. 
+
+## more resources: window rendering scope complex things
+1) https://www.youtube.com/watch?v=8aGhZQkoFbQ
+Philip Roberts: What the heck is the event loop anyway? | JSConf EU 2014
+min 15:30 sec
+
+Note: pay attend to Phil's talk at 22:52, render que is DOM set up, Callback Queue is ex: setTimeout(callback)
+
+- main topics of Phil's talk: Demystifies event-loop”, “non-blocking”, “callback”, “asynchronous”, “single-threaded” and “concurrency”.
+
+https://2014.jsconf.eu/speakers/philip-roberts-what-the-heck-is-the-event-loop-anyway.html
+
+- Phil's loupe app link
+http://latentflip.com/loupe/?code=JC5vbignYnV0dG9uJywgJ2NsaWNrJywgZnVuY3Rpb24gb25DbGljaygpIHsKICAgIHNldFRpbWVvdXQoZnVuY3Rpb24gdGltZXIoKSB7CiAgICAgICAgY29uc29sZS5sb2coJ1lvdSBjbGlja2VkIHRoZSBidXR0b24hJyk7ICAgIAogICAgfSwgMjAwMCk7Cn0pOwoKY29uc29sZS5sb2coIkhpISIpOwoKc2V0VGltZW91dChmdW5jdGlvbiB0aW1lb3V0KCkgewogICAgY29uc29sZS5sb2coIkNsaWNrIHRoZSBidXR0b24hIik7Cn0sIDUwMDApOwoKY29uc29sZS5sb2coIldlbGNvbWUgdG8gbG91cGUuIik7!!!PGJ1dHRvbj5DbGljayBtZSE8L2J1dHRvbj4%3D
+
+Note:
+Does v8 have call stack, event loop, callback queue, apis?
+V8 has call stack and heap.
+
+## topic: demystify runtime, callback
+- V8: JavaScript run time inside Chrome (https://github.com/v8/v8/wiki)
+- heap: where memory allocation happen
+- callstack: where stackframes lives
+
+V8 codebase clone such as DOM, setTimeout, XML, httprequest and realize there is no setTime in code base.
+
+JavaScript is single thread programming language.
+- Call stack: data structure which records where in the program we are.
+stack - put on top and pop off top when you reach return statment or implicitly when you arrived at end of the function.
+
+// http://latentflip.com/loupe/?code=ZnVuY3Rpb24gbXVsdGlwbHkoYSxiKSB7CiAgcmV0dXJuIGEgKiBiOwp9CgpmdW5jdGlvbiBzcXVhcmUobikgewogIHJldHVybiBtdWx0aXBseShuLCBuKTsKfQoKZnVuY3Rpb24gcHJpbnRTcXVhcmUobikgewogIHZhciBzcXVhcmVkID0gc3F1YXJlKG4pOwogIGNvbnNvbGUubG9nKHNxdWFyZWQpOwp9CgpwcmludFNxdWFyZSg0KTs%3D!!!PGJ1dHRvbj5DbGljayBtZSE8L2J1dHRvbj4%3D
+// watch walk thru his latentflip.com @ 5 min on Phil's video
+https://www.youtube.com/watch?v=8aGhZQkoFbQ
+
+function multiply(a,b) {
+  return a * b;
+}
+
+function square(n) {
+  return multiply(n, n);
+}
+
+function printSquare(n) {
+  var squared = square(n);
+  console.log(squared);
+}
+
+printSquare(4);
+
+// next example for callstack when error is thrown.
+
+function foo () {
+  throw new Error('Oops!');
+}
+
+function bar() {
+  foo();
+}
+
+function baz() {
+  bar();
+}
+
+baz();
+
+// error shows stack trace in the console.
+194fb93f-0d91-4dac-9c11-5484d166af12:236 Uncaught Error: Oops!
+foo @ 194fb93f-0d91-4dac-9c11-5484d166af12:236
+bar @ 194fb93f-0d91-4dac-9c11-5484d166af12:240  
+baz @ 194fb93f-0d91-4dac-9c11-5484d166af12:245  // second function call that ran
+(anonymous) @ 194fb93f-0d91-4dac-9c11-5484d166af12:249 // this is main function
+
+// *** next example infinite function (recursive function)
+function foo () {
+  return foo();
+}
+foo();
+
+/// recursive with no end; your browser kills recursive after awhile
+// error message: "RangeError: Maximum call stack size exceeded"
+
+
+Look at philEx.js for more examples.
+
+# Blocking (slow code):
+- console.log not slow
+- while loop 1 to 10 bill may be slow
+- network request, image processing slow
+
+Things that are slow and codes that are on the stack > Blocking
+
+// Network request good ex of blocker.  slower than computers and it takes to while to run through each line of code.
+// jquery is like ajax request
+
+var foo = $.getSync('//foo.com'); // processing network request on top of stack1
+var bar = $.getSync('//bar.com'); // once foo network request processed (popOff) bar is up next
+// note: some network request may not ever finish
+var qux = $.getSync('//qux.com');
+
+// finally, network requesting blocking behaviours complete and next lines of code is in stack
+// now we can clear the stack
+console.log(foo);  // console.log is fast
+console.log(bar);
+console.log(qux);
+
+Lesson: since JavaScript is single threaded there it needs to wait for the network request to finish. there is no other way to handle blockers before faster things
+
+Why is blocking a problem?  b/c we are running code in browsers.  
+Once stack is blocked browsers can't render anything in synchronous call.  
+
+- How do we handle blocking?  asynchronous callbacks
+Asynchronous helps make blocking go away in browsers.  ex) callback
+console.log('Hi');
+
+// setTimeout callback 
+// setTimeout(callback);  callback function goes into Webapis waits for the timer to hit 5 sec.  (note: callback is not blocking stack)
+// once the webapis done it push its api into
+
+setTimeout(function () {
+  console.log('There');
+}, 5000);
+
+console.log('JSConfEU');
+
+- How does browser remember to go back and process setTimeout()?
+Concurrency & the Event Loop
+	Reason JavaScript can do more than one thing at a time (concurrently) in runtime, the browser is more than just runtime.  ex) WebAPIs are threads where DOM, AJAX request, CALLbacks which concurrency can kicks in.  
+
+- WebAPIs: threads with priorities DOM, ajax, callbacks go here
+
+- event loop: job is to watch the stack and task queue if stack is empty then push items from task queue to stack.
+
+When wrapping a function inside of setTimeout() is when we want to deferring your function until stack is cleared which then event loop will push you inside stack from task queue.
+
+- ajax request
+
+console.log('Hi');
+
+// ajax request does not live JSruntime but lives on webapis
+// calls XHR() / callback
+$.get('url', function cb(data) {
+	console.log(data);
+}); 
+
+console.log('JSConfEu');
+
+This is demo of how your code can continue to run while callback gets its job done in webapis then task queue then event loop push callback into (only if stack is empty) stack.
+This does not block the runtime stack.
+
+** another example:
+
+console.log('Started');
+
+// .on() is web Apis and when clicked it get on the callback Queue
+$.on('button', 'click', function onClick () {
+	console.log('Clicked');
+}); 
+
+setTimeout(function onTimeout () {
+	console.log('Timeout Finished');
+}, 5000);
+
+console.log('Done');
+
+** another example:
+// setTimeout 4 times with 1 sec delays
+//  timeout callbacks get queued therefore setTimeout 1 sec delay 
+//  doesn't get run really long while until call stack is all cleared
+setTimeout(function timeout() {
+	console.log('hi');
+}, 1000);
+
+setTimeout(function timeout() {
+	console.log('hi');
+}, 1000);
+
+setTimeout(function timeout() {
+	console.log('hi');
+}, 1000);
+
+setTimeout(function timeout() {
+	console.log('hi');
+}, 1000);
+
+Lesson: idea about async apis and its behaivor of setTimeout()
+setTimeout(callback(), 1sec) is not guranteed time to execution but minimum time to execution.
+
+Just the same with setTimeout(callback(), 0sec); doesn't run immediately but just wait until call stack first get cleared which is nextish..
+
+*** another example ***
+// Synchronous
+[1,2,3,4].forEach(function (i) {
+	console.log(i);
+});
+
+// Asynchronous
+function asyncForEach(array, cb) {
+	array.forEach(function () {
+		setTimeout(cb, 0);
+	});
+}
+
+asyncForEach([1,2,3,4], function (i) {
+	console.log(i);
+})
+
+
+
+2) https://www.youtube.com/watch?v=QyUFheng6J0&t=1189s
+Arindam Paul - JavaScript VM internals, EventLoop, Async and ScopeChains
+Topic covered: scopes and closures
+
