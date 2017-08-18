@@ -998,3 +998,54 @@ Person('Gordon');
 // Person object this is assigned to default value window.
 // species and names are assigned to global window obj
 // Under Local, return value: undefined which you see as a output
+
+
+- SimpleTest Objective/Goal:
+*** TODO: Get successes to be green. ***
+*** TODO: Make sure only one error per failure goes to the console. ***
+*** TODO: Make failures red. ***
+*** TODO: Show stack taces for failures. ***
+*** TODO: Only show stack traces if you click expand. ***
+*** TODO: Output summary statistics to the DOM. ***
+
+*** TODO: Get successes to be green. ***
+# update console.log text tobe green
+console.log('%cTest:' + testName + 'OK', "color: green");
+// first argument represents text and second argument styling
+- rule for styling: 
+  console.log("%cFirstargument' + 'only' + 'consists of text', "color: green")
+
+refactor:
+var testName = "test has passed!";
+console.log('%c' + testName, 'color: green');
+
+*** TODO: Make sure only one error per failure goes to the console. ***
+change console.error to console.log so it simply logs error
+*** TODO: Make failures red. ***
+console.log('%c' + testName, 'color: red;');
+
+*** TODO: Show stack taces for failures. ***
+
+console.group(); // defaults to expanded
+console.groupCollapsed(); //default to collapsed
+
+
+*** TODO: Only show stack traces if you click expand. ***
+lesson learned:
+console.groupCollapsed('title');
+console.error(e.stack); // middle message
+console.groupEnd();
+
+*** TODO: Output summary statistics to the DOM. ***
+find the block of code that deals with DOM.  it is setTimeout();
+                // Output summary statistics.
+                // Number of tests that were run.
+                // Number of successes.
+                // Number of failures.
+
+                var numberOfTests = Object.keys(tests).length; // no of properties(key) in tests obj
+                var successes = numberOfTests - failures;
+
+                console.log('Number of tests ' + numberOfTests);
+                console.log('Failures ' + failures);
+                console.log('Successes ' + successes);
