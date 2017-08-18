@@ -801,7 +801,7 @@ setTimeout(callback(), 1sec) is not guranteed time to execution but minimum time
 Just the same with setTimeout(callback(), 0sec); doesn't run immediately but just wait until call stack first get cleared which is nextish..
 
 *** another example ***
-// Synchronous
+// Synchronous for forEach running in current stack
 [1,2,3,4].forEach(function (i) {
 	console.log(i);
 });
@@ -817,9 +817,175 @@ asyncForEach([1,2,3,4], function (i) {
 	console.log(i);
 })
 
+// make each element print out Asynchronously
+function asyncForEach(array, cb) {
+  array.forEach(function (k) {
+		// bind this callback and pass in argument k 
+    setTimeout(cb.bind(this, k), 0);
+  });
+}
 
+debugger;
+asyncForEach([1,2,3,4], function (i) {
+  console.log("hi-"+ i);
+})
+
+*** delay function cb example ***
+// Synchronous for forEach running in current stack
+[1,2,3,4].forEach(function (i) {
+	console.log('processing sync');
+	delay();
+});
+
+// make each element print out Asynchronously
+function asyncForEach(array, cb) {
+	array.forEach(function () {
+		setTimeout(cb, 0);
+	});
+}
+
+asyncForEach([1,2,3,4], function (i) {
+	console.log("processing async", i);
+})
+
+- browser renders 16 frames a sec.  render is like callback which it runs when call stack is empty. when render is block, you can't select things on the screen, see the next response..
+synchronous will block the rendering
+but asynchronous will not.
+
+
+*** scroll handler example ***
+function animateSomething() {
+	delay();
+}
+
+$.on('document', 'scroll', animateSomething);
+
+// when scroll animateSomething will queue up on event handler which may get cause issue.
+// one way to resolve queuing up issue is let's wait until user stops scrolling or let's process this every 3 min.+
 
 2) https://www.youtube.com/watch?v=QyUFheng6J0&t=1189s
 Arindam Paul - JavaScript VM internals, EventLoop, Async and ScopeChains
 Topic covered: scopes and closures
 
+*** recommended course: ***
+- Structure and Interpretation of Computer Programshttps://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/syllabus/
+
+- topic to cover:
+* JavaScript Interpretation and Memory Model
+* Compilation and Variable Hoisting
+* Function Execution
+* Scope Chains and Closure
+* JavaScript Runtime and Event loop
+* Async Examples
+* Single Threaded parallel execution
+
+
+** example code
+var a = 2;
+b = 1;
+
+function f(z) {
+	b = 3;
+	c = 4;
+	var d = 6;
+	e = 1;
+
+	function g() {
+		var e = 0;
+		d = 3 * d;
+		return d;
+	}
+
+	return g();
+	var e;
+}
+
+f(1); // 18 due to d = 3 * d where d is 6
+
+function makeAdder(n) {
+	var inc = n;
+	var sum = 0;
+	return function add() {
+		sum = sum + inc;
+		return sum;
+	};
+}
+
+var adder3 = makeAdder(3);
+adder3(); // 3 and it keeps increasing by 3
+
+*** sync example 1 by Arindam ***
+// Asynchronous
+setTimeout(function timeout() {
+    console.log('hi');
+}, 2000);
+
+*** sync example 2 by Arindam ***
+// suppose we have a slow function s.a. process()
+function process(num) {
+    // function to delay
+    delay();
+    console.log(num);
+}
+
+// Synchronus
+[1,2,3,4,5,6].forEach(function(i){
+    process(i);
+});
+
+*** async example 2 by Arindam ***
+function process(num) {
+    // function to delay
+    delay();
+    console.log(num);
+}
+
+// ASynchronus
+[1,2,3,4,5,6].forEach(function(i){
+	// no need to set i here since it is out of reference it will
+	//  be available through closure 
+    setTimeout(function() {
+      process(i);        
+    });
+});
+
+# tinyTest video 2
+
+- Ternary operator
+convert if/else statement 
+// document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999'); 
+
+var failures = 0;
+var color = (if(failures === 0) then 'green' else 'red');
+
+// document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999'); 
+// terniary operator break down
+var failures = 0;
+var color = (failures === 0 ? 'green' : 'red');
+console.log(color);  // output: 'green'
+
+
+
+- object constructor
+use new keyword when creating brand new object using object constructor
+// constructor function: main function is to create obj easily.
+// ex: tinytest.js code: new Error('fail(): ' + msg);
+
+// define constructor function
+// by convention capitalize constructor function name
+//  which is reminder to use new keyword to create obj
+function Person(name) {
+  // name - Gordon
+  // species - Human
+
+  // this = {} empty object
+  this.name = name;
+  this.species = 'human';
+  // at the end return this;
+}
+
+new Person('Gordon');
+
+// what is happening when you don't use new keyword?
+debugger;
+Person('Gordon');
