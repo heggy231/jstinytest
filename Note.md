@@ -987,5 +987,14 @@ function Person(name) {
 new Person('Gordon');
 
 // what is happening when you don't use new keyword?
+function Person (name) {
+	this.name = name;
+	this.species = 'human';
+}
+
 debugger;
 Person('Gordon');
+
+// Person object this is assigned to default value window.
+// species and names are assigned to global window obj
+// Under Local, return value: undefined which you see as a output
